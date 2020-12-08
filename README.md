@@ -21,3 +21,24 @@
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
 -->
 
+Number and name of feature: Repository setup
+
+Estimate of time needed to complete: 30 minutes
+
+Start time: 3:30pm
+
+Finish time: 4:20pm
+
+Actual time needed to complete: 50 minutes
+
+
+
+Number and name of feature: ________________________________
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
