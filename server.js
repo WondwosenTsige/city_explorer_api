@@ -10,7 +10,7 @@ app.listen(PORT);
 
 
 
-
+app.listen(PORT, () => console.log(`app is listening at ${PORT}`));
 
 // Add error handling and start server
 app.use('*', (request, response) => {

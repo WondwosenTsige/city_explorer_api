@@ -1,7 +1,7 @@
 # Project Name city_explorer_api
 
-**Author**: Your Name Goes Here
-**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+**Author**: Wondwosen Tsige
+**Version**: 1.0.0
 
 ## Overview
 <!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
@@ -33,12 +33,12 @@ Actual time needed to complete: 50 minutes
 
 
 
-Number and name of feature: ________________________________
+Number and name of feature: Heroku deployment
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 
 
-Start time: _____
+Start time: 5:00 pm
 
-Finish time: _____
+Finish time: 8:15 pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: not completed yet
