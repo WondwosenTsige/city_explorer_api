@@ -1,13 +1,15 @@
 
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
 const app = express();
-const PORT = process.env.PORT || 3002;
-app.listen(PORT);
+const PORT = process.env.PORT || 3000;
 
 
 
 
+
+app.listen(PORT, () => console.log(`app is listening at ${PORT}`));
 
 // Add error handling and start server
 app.use('*', (request, response) => {
