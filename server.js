@@ -1,6 +1,8 @@
 'use strict'
 
 const express = require('express');
+const superagent = require('superagent');
+
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
@@ -10,22 +12,27 @@ app.use(cors());
 
 app.get('/location', function(req, res){
   
-    const accessLocation = require('./data/location.json');
-    const accessCity = req.query.city;
-    const findlocation = new Location(accessLocation, accessCity);
-    res.status(200).json(findlocation);
+    const LOCATION_API_KEY = process.env.LOCATION_API_KEY;
+    const url = `https://us1.locationiq.com/v1/search.php?key=${LOCATION_API_KEY}&q=${req.query.city}&format=json`
+    superagent.get(url).then(newLocation =>{
+      const locationData = newLocation.body;
+      const locationValue = new Location(locationData, req.query.city);
+      res.send(locationValue);
+    })
   
-})
+});
 
 app.get('/weather', function(req, res){
   
     const getWeatherCondition = [];
-    const accessWeather = require('./data/weather.json');
-    accessWeather.data.forEach(weatherCondition =>{
-      getWeatherCondition.push(new weatherCondition(weatherCondition))
-    });
-  res.send(getWeatherCondition);
-})
+    const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
+    const url = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_API_KEY}&days=8&lat=47.6038321&lon=-122.3300624`
+    superagent.get(url).then(weatherUpdate =>{
+      const weatherCondition = weatherUpdate.body;
+      getWeatherCondition = weatherCondition.data.map(instanceWeather => new Weather(instanceWeather));
+        res.send(getWeatherCondition);
+      })
+ });
 
 function Location (location, city){
   this.search_query = city;
