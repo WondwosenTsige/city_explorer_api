@@ -29,7 +29,7 @@ app.get('/weather', function(req, res){
 
 function Location (location, city){
   this.search_query = city;
-  this,formatted_query = location[0].display_name;
+  this.formatted_query = location[0].display_name;
   this.latitude = location[0].lat;
   this.longitude = location[0].lon;
 
