@@ -42,3 +42,14 @@ Start time: 5:00 pm
 Finish time: 8:15 pm
 
 Actual time needed to complete: not completed yet
+
+
+Number and name of feature: Heroku deployment (DEC 8 2020)
+
+Estimate of time needed to complete: 
+
+Start time: 2:00 pm
+
+Finish time: 4: pm
+
+Actual time needed to complete: Overall it took me 5 hours 30 minutes
