@@ -18,7 +18,7 @@ app.get('/location', function(req, res){
       const locationData = newLocation.body;
       const locationValue = new Location(locationData, req.query.city);
       res.send(locationValue);
-    })
+    }).catch(error => console.log(error));
   
 });
 
@@ -29,9 +29,9 @@ app.get('/weather', function(req, res){
     const url = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_API_KEY}&days=8&lat=47.6038321&lon=-122.3300624`
     superagent.get(url).then(weatherUpdate =>{
       const weatherCondition = weatherUpdate.body;
-      getWeatherCondition = weatherCondition.data.map(instanceWeather => new Weather(instanceWeather));
+      weatherCondition.data.map(updatedWeather => new Weather(updatedWeather));
         res.send(getWeatherCondition);
-      })
+      }).catch(error => console.log(error));
  });
 
 function Location (location, city){
