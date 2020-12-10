@@ -2,11 +2,14 @@
 
 const express = require('express');
 const superagent = require('superagent');
-
+const pg = require('pg'); // we are setting up pg to laod into our app
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DATABASE_URL = process.env.DATABASE_URL;  // environmental variable setup to store our username and pass
+const client = new pg.Client(DATABASE_URL);          // setting up the variable client to do the asking 
+client.on('error', error => console.error(error));
 app.use(cors());
 
 
@@ -86,8 +89,13 @@ function Trials(hikiingPlace){
 
 // Add error handling and start server
 
-app.listen(PORT, () => console.log(`app is listening at ${PORT}`));
-
 app.use('*', (request, response) => {
     response.status(404).send('ERROR LOADING PAGE');
+
   });
+
+  // connect the pg client to the databse
+  
+  client.connect().then(() =>{
+  app.listen(PORT, () => console.log(`app is listening at ${PORT}`));
+  }).catch(error=> console.error(error));
