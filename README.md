@@ -87,6 +87,6 @@ Estimate of time needed to complete: 5hrs
 
 Start time: 6:00
 
-Finish time: 
+Finish time: 10:20
 
-Actual time needed to complete: 
+Actual time needed to complete: Left with heroku deployment
