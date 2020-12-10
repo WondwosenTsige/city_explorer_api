@@ -64,3 +64,29 @@ Start time: 6:30
 Finish time: 11:50 but I did the code challenge in between
 
 Actual time needed to complete: not completed yet
+
+
+Actual time needed to complete: Overall it took me 5 hours 30 minutes
+
+
+Number and name of feature: APIs
+
+Estimate of time needed to complete: 2hrs
+
+Start time: 1:30pm
+
+Finish time: 5:45pm
+
+Actual time needed to complete: 4 hrs
+
+
+
+Number and name of feature: Persistence with SQL
+
+Estimate of time needed to complete: 5hrs
+
+Start time: 6:00
+
+Finish time: 
+
+Actual time needed to complete: 
