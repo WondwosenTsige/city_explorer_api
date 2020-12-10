@@ -61,6 +61,6 @@ Estimate of time needed to complete: 4hrs
 
 Start time: 6:30
 
-Finish time: _____
+Finish time: 11:50 but I did the code challenge in between
 
-Actual time needed to complete: _____
+Actual time needed to complete: not completed yet
