@@ -13,7 +13,7 @@ app.use(cors());
 app.get('/location', function(req, res){
   
     const LOCATION_API_KEY = process.env.LOCATION_API_KEY;
-    const url = `https://us1.locationiq.com/v1/search.php?key=${LOCATION_API_KEY}&q=${req.query.city}&format=json`
+    const url = `https://us1.locationiq.com/v1/search.php?key=${LOCATION_API_KEY}&q=${req.query.city}&format=json`;
     superagent.get(url).then(newLocation =>{
       const locationData = newLocation.body;
       const locationValue = new Location(locationData, req.query.city);
@@ -24,15 +24,35 @@ app.get('/location', function(req, res){
 
 app.get('/weather', function(req, res){
   
-    const getWeatherCondition = [];
+    const lon = req.query.longitude;
+    const lat = req.query.latitude;
     const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
-    const url = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_API_KEY}&days=8&lat=47.6038321&lon=-122.3300624`
+    const url = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_API_KEY}&days=8&lon=${lon}&lat=${lat}`
+    
     superagent.get(url).then(weatherUpdate =>{
+      
       const weatherCondition = weatherUpdate.body;
-      weatherCondition.data.map(updatedWeather => new Weather(updatedWeather));
-        res.send(getWeatherCondition);
+      const getWeatherCondition = weatherCondition.data.map(updatedWeather => new Weather(updatedWeather));
+     res.send(getWeatherCondition);
       }).catch(error => console.log(error));
  });
+
+ app.get('/trails', function(req, res){
+
+  const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
+  const lon = req.query.longitude;
+  const lat = req.query.latitude;
+  const url = `https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&maxDistance=100&key=${TRAIL_API_KEY}`
+  superagent.get(url).then(trialInfo =>{
+    const newTrialData = trialInfo.body;
+    // console.log(trialInfo);
+    const updatedTrail = newTrialData.trails.map(trialInfo => new Trials(trialInfo));
+    // console.log(updatedTrail);
+    res.send(updatedTrail);
+
+  }).catch(error => console.log(error));
+
+ })
 
 function Location (location, city){
   this.search_query = city;
@@ -43,9 +63,26 @@ function Location (location, city){
 }
 
 function Weather(weather){
-  this.forcast = weather.weather.desciption;
+  this.forecast = weather.weather.description;
   this.time = weather.valid_date;
 }
+
+
+function Trials(hikiingPlace){
+
+  this.name = hikiingPlace.name;
+  this.location = hikiingPlace.location;
+  this.lenght = hikiingPlace.length;
+  this.stars = hikiingPlace.stars;
+  this.votes = hikiingPlace.votes;
+  this.star_votes = hikiingPlace.star_votes;
+  this.summary = hikiingPlace.summary;
+  this.conditions = hikiingPlace.conditionStatus;
+  this.condition_date = hikiingPlace.conditionDate;
+  this.condition_time =hikiingPlace.conditionDate;
+}
+
+
 
 // Add error handling and start server
 
