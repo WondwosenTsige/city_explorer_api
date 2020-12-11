@@ -18,7 +18,7 @@ app.use(cors());
 
 app.get('/location', function(req, res){
 
-  client.query('SELECT * FROM cities WHERE search_query=1;', [req.query.city]).then(data => {
+  client.query('SELECT * FROM firstTable WHERE search_query=$1;', [req.query.city]).then(data => {
     if(data.rows > 0){
       res.send(rows[0]);
     }else{
