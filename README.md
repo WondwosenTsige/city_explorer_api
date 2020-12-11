@@ -19,6 +19,8 @@
 
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+
+Credit for Chance Harnom for fixing different postgress issues and helping on fixing coding errors
 -->
 
 Number and name of feature: Repository setup
@@ -90,3 +92,14 @@ Start time: 6:00
 Finish time: 10:20
 
 Actual time needed to complete: Left with heroku deployment
+
+
+Number and name of feature: Persistence with SQL
+
+Estimate of time needed to complete: 2hrs
+
+Start time: 4:10pm
+
+Finish time: 5:30PM
+
+Actual time needed to complete: 1hr 20 minutes
