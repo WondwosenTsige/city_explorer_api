@@ -174,7 +174,7 @@ function MovieDb(movie){
 // Add error handling and start server
 
 app.use('*', (request, response) => {
-    response.status(500).send('ERROR LOADING PAGE');
+    response.status(400).send('ERROR LOADING PAGE');
 
   });
 
