@@ -8,23 +8,41 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;  // environmental variable setup to store our username and pass
-const client = new pg.Client(DATABASE_URL);          // setting up the variable client to do the asking 
+
+const client = new pg.Client(DATABASE_URL); 
+         // setting up the variable client to do the asking 
 client.on('error', error => console.error(error));
+
 app.use(cors());
 
 
 app.get('/location', function(req, res){
-  
-    const LOCATION_API_KEY = process.env.LOCATION_API_KEY;
-    const url = `https://us1.locationiq.com/v1/search.php?key=${LOCATION_API_KEY}&q=${req.query.city}&format=json`;
-    superagent.get(url).then(newLocation =>{
-      const locationData = newLocation.body;
-      const locationValue = new Location(locationData, req.query.city);
-      res.send(locationValue);
-    }).catch(error => console.log(error));
-  
-});
 
+  client.query('SELECT * FROM cities WHERE search_query=1;', [req.query.city]).then(data => {
+    if(data.rows > 0){
+      res.send(rows[0]);
+    }else{
+      const LOCATION_API_KEY = process.env.LOCATION_API_KEY;
+      const url = `https://us1.locationiq.com/v1/search.php?key=${LOCATION_API_KEY}&q=${req.query.city}&format=json`;
+      superagent.get(url).then(newLocation =>{
+        const locationData = newLocation.body;
+        const locationValue = new Location(locationData, req.query.city);
+        client.query(`INSERT INTO firstTable (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4);` , 
+        [req.query.city, locationValue.formatted_query, locationValue.latitude, locationValue.longitude])
+        .then(() => {
+          res.send(locationValue);
+          
+        })
+
+
+    }).catch(error => console.log(error));
+  };
+
+  })
+
+  });
+  
+  
 app.get('/weather', function(req, res){
   
     const lon = req.query.longitude;
