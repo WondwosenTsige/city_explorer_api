@@ -103,3 +103,14 @@ Start time: 4:10pm
 Finish time: 5:30PM
 
 Actual time needed to complete: 1hr 20 minutes
+
+
+Number and name of feature: SQL continued
+
+Estimate of time needed to complete: 3hrs
+
+Start time: 7:17pm
+
+Finish time: 11:17
+
+Actual time needed to complete: not completed yet
