@@ -18,7 +18,8 @@ app.use(cors());
 
 app.get('/location', function(req, res){
 
-  client.query('SELECT * FROM firstTable WHERE search_query=$1;', [req.query.city]).then(data => {
+  
+  client.query('SELECT * FROM locateall WHERE search_query=$1;', [req.query.city]).then(data => {
     if(data.rows > 0){
       res.send(rows[0]);
     }else{
@@ -27,13 +28,12 @@ app.get('/location', function(req, res){
       superagent.get(url).then(newLocation =>{
         const locationData = newLocation.body;
         const locationValue = new Location(locationData, req.query.city);
-        client.query(`INSERT INTO firstTable (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4);` , 
+        client.query(`INSERT INTO locateall (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4);` , 
         [req.query.city, locationValue.formatted_query, locationValue.latitude, locationValue.longitude])
         .then(() => {
           res.send(locationValue);
           
         })
-
 
     }).catch(error => console.log(error));
   };
@@ -44,6 +44,10 @@ app.get('/location', function(req, res){
   
   
 app.get('/weather', function(req, res){
+
+  /*client.query('SELECT * FROM weather WHERE search_query=$1;', [req.query.city]).then(data => {
+
+  }*/
   
     const lon = req.query.longitude;
     const lat = req.query.latitude;
@@ -75,15 +79,61 @@ app.get('/weather', function(req, res){
 
  })
 
-function Location (location, city){
-  this.search_query = city;
-  this.formatted_query = location[0].display_name;
-  this.latitude = location[0].lat;
-  this.longitude = location[0].lon;
+ app.get('/movies', function(req, res){
 
-}
+  const MOVIE_API_KEY = process.env.MOVIE_API_KEY;
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${MOVIE_API_KEY}&query=${req.query.search_query}`
+  superagent.get(url).then(movieInfo =>{
+    const newInfo = movieInfo.body;
+    console.log(newInfo);
+    const updatedInfo = newInfo.results.map(movieInfo => new MovieDb(movieInfo));
+    res.send(updatedInfo);
+  }).catch(error => console.log(error));
 
-function Weather(weather){
+  })
+
+
+  // app.get('/yelp', function(req, res){
+
+  // res.send(
+  //   [
+  //     {
+  //       "name": "Pike Place Chowder", .name
+  //       "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/ijju-wYoRAxWjHPTCxyQGQ/o.jpg",
+  //       "price": "$$   ", 
+  //       "rating": "4.5",
+  //       "url": "https://www.yelp.com/biz/pike-place-chowder-seattle?adjust_creative=uK0rfzqjBmWNj6-d3ujNVA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=uK0rfzqjBmWNj6-d3ujNVA"
+  //     },
+  //     {
+  //       "name": "Umi Sake House",
+  //       "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/c-XwgpadB530bjPUAL7oFw/o.jpg",
+  //       "price": "$$   ",
+  //       "rating": "4.0",
+  //       "url": "https://www.yelp.com/biz/umi-sake-house-seattle?adjust_creative=uK0rfzqjBmWNj6-d3ujNVA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=uK0rfzqjBmWNj6-d3ujNVA"
+  //     },
+      
+  //   ]
+  //   )
+  // })
+
+
+  function Yelp (dining){
+    this.name = dining.name;
+    this.image_url = dining.image_url;
+    this.price = dining.price;
+    this.rating = dining.rating;
+    this.url = dining.url;
+  }
+  
+  function Location (location, city){
+    this.search_query = city;
+    this.formatted_query = location[0].display_name;
+    this.latitude = location[0].lat;
+    this.longitude = location[0].lon;
+    
+  }
+  
+  function Weather(weather){
   this.forecast = weather.weather.description;
   this.time = weather.valid_date;
 }
@@ -105,10 +155,26 @@ function Trials(hikiingPlace){
 
 
 
+function MovieDb(movie){
+
+  this.title = movie.original_title;
+  this.overview = movie.overview;
+  this.average_votes = movie.average_votes;
+  this.total_votes = movie.total_votes;
+  this.image_url = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  this.popularity = movie.popularity;
+  this.released_on = movie.released_path;
+}
+
+
+
+
+
+
 // Add error handling and start server
 
 app.use('*', (request, response) => {
-    response.status(404).send('ERROR LOADING PAGE');
+    response.status(500).send('ERROR LOADING PAGE');
 
   });
 
