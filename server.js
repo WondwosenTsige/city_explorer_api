@@ -70,7 +70,6 @@ app.get('/weather', function(req, res){
   const url = `https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&maxDistance=100&key=${TRAIL_API_KEY}`
   superagent.get(url).then(trialInfo =>{
     const newTrialData = trialInfo.body;
-    // console.log(trialInfo);
     const updatedTrail = newTrialData.trails.map(trialInfo => new Trials(trialInfo));
     // console.log(updatedTrail);
     res.send(updatedTrail);
@@ -174,7 +173,7 @@ function MovieDb(movie){
 // Add error handling and start server
 
 app.use('*', (request, response) => {
-    response.status(500).send('ERROR LOADING PAGE');
+    response.status(400).send('ERROR LOADING PAGE');
 
   });
 
