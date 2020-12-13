@@ -8,6 +8,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;  // environmental variable setup to store our username and pass
+const LOCATION_API_KEY = process.env.LOCATION_API_KEY;
+const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
+const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
+const YELP_API_KEY = process.env.YELP_API_KEY;
 
 const client = new pg.Client(DATABASE_URL); 
          // setting up the variable client to do the asking 
@@ -15,15 +19,24 @@ client.on('error', error => console.error(error));
 
 app.use(cors());
 
+//   =======================================================  Routes       =====================================================
 
-app.get('/location', function(req, res){
+app.get('/yelp', getYelpInfo );
+app.get('/trails', getTrailsInfo);
+app.get('/location', getLocationInfo);
+app.get('/movies', getMoviesInfo);
+app.get('/weather', getWeatherInfo);
+
+
+function getLocationInfo(req, res){
 
   
   client.query('SELECT * FROM locateall WHERE search_query=$1;', [req.query.city]).then(data => {
-    if(data.rows > 0){
-      res.send(rows[0]);
+    if(data.rows.length !== 0){
+      console.log(req.query.city + " information is returned from database");
+      res.send(data.rows[0]);
     }else{
-      const LOCATION_API_KEY = process.env.LOCATION_API_KEY;
+      console.log(req.query.city + " information is searched from the web using my API");
       const url = `https://us1.locationiq.com/v1/search.php?key=${LOCATION_API_KEY}&q=${req.query.city}&format=json`;
       superagent.get(url).then(newLocation =>{
         const locationData = newLocation.body;
@@ -40,10 +53,10 @@ app.get('/location', function(req, res){
 
   })
 
-  });
+  };
   
   
-app.get('/weather', function(req, res){
+function getWeatherInfo(req, res){
 
   /*client.query('SELECT * FROM weather WHERE search_query=$1;', [req.query.city]).then(data => {
 
@@ -51,7 +64,6 @@ app.get('/weather', function(req, res){
   
     const lon = req.query.longitude;
     const lat = req.query.latitude;
-    const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
     const url = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_API_KEY}&days=8&lon=${lon}&lat=${lat}`
     
     superagent.get(url).then(weatherUpdate =>{
@@ -60,11 +72,10 @@ app.get('/weather', function(req, res){
       const getWeatherCondition = weatherCondition.data.map(updatedWeather => new Weather(updatedWeather));
      res.send(getWeatherCondition);
       }).catch(error => console.log(error));
- });
+ };
 
- app.get('/trails', function(req, res){
+ function getTrailsInfo(req, res){
 
-  const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
   const lon = req.query.longitude;
   const lat = req.query.latitude;
   const url = `https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&maxDistance=100&key=${TRAIL_API_KEY}`
@@ -76,9 +87,9 @@ app.get('/weather', function(req, res){
 
   }).catch(error => console.log(error));
 
- })
+ }
 
- app.get('/movies', function(req, res){
+ function getMoviesInfo(req, res){
 
   const MOVIE_API_KEY = process.env.MOVIE_API_KEY;
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${MOVIE_API_KEY}&query=${req.query.search_query}`
@@ -90,12 +101,11 @@ app.get('/weather', function(req, res){
     res.send(updatedInfo);
   }).catch(error => console.log(error));
 
-  })
+  }
 
 
-  app.get('/yelp', function(req, res){
+  function getYelpInfo(req, res){
 
-  const YELP_API_KEY = process.env.YELP_API_KEY;
   const url = `https://api.yelp.com/v3/businesses/search?location=${req.query.search_query}&term="restaurant"`;
 
     superagent.get(url).set('Authorization' , `Bearer ${YELP_API_KEY}`)
@@ -106,7 +116,7 @@ app.get('/weather', function(req, res){
       res.send(newInfo);
     }).catch(error => console.log(error));
 
-  })
+  }
 
   
 
