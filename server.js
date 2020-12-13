@@ -83,8 +83,9 @@ app.get('/weather', function(req, res){
   const MOVIE_API_KEY = process.env.MOVIE_API_KEY;
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${MOVIE_API_KEY}&query=${req.query.search_query}`
   superagent.get(url).then(movieInfo =>{
+
     const newInfo = movieInfo.body;
-    console.log(newInfo);
+    //console.log(newInfo);
     const updatedInfo = newInfo.results.map(movieInfo => new MovieDb(movieInfo));
     res.send(updatedInfo);
   }).catch(error => console.log(error));
@@ -92,29 +93,22 @@ app.get('/weather', function(req, res){
   })
 
 
-  // app.get('/yelp', function(req, res){
+  app.get('/yelp', function(req, res){
 
-  // res.send(
-  //   [
-  //     {
-  //       "name": "Pike Place Chowder", .name
-  //       "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/ijju-wYoRAxWjHPTCxyQGQ/o.jpg",
-  //       "price": "$$   ", 
-  //       "rating": "4.5",
-  //       "url": "https://www.yelp.com/biz/pike-place-chowder-seattle?adjust_creative=uK0rfzqjBmWNj6-d3ujNVA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=uK0rfzqjBmWNj6-d3ujNVA"
-  //     },
-  //     {
-  //       "name": "Umi Sake House",
-  //       "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/c-XwgpadB530bjPUAL7oFw/o.jpg",
-  //       "price": "$$   ",
-  //       "rating": "4.0",
-  //       "url": "https://www.yelp.com/biz/umi-sake-house-seattle?adjust_creative=uK0rfzqjBmWNj6-d3ujNVA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=uK0rfzqjBmWNj6-d3ujNVA"
-  //     },
-      
-  //   ]
-  //   )
-  // })
+  const YELP_API_KEY = process.env.YELP_API_KEY;
+  const url = `https://api.yelp.com/v3/businesses/search?location=${req.query.search_query}&term="restaurant"`;
 
+    superagent.get(url).set('Authorization' , `Bearer ${YELP_API_KEY}`)
+    .then(getBusinessInfo =>{
+      const businessInfo = getBusinessInfo.body.businesses;
+      const newInfo = businessInfo.map(getBusinessInfo => new Yelp(getBusinessInfo))
+        
+      res.send(newInfo);
+    }).catch(error => console.log(error));
+
+  })
+
+  
 
   function Yelp (dining){
     this.name = dining.name;
