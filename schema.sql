@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS firstTable;
+DROP TABLE IF EXISTS locateall;
 CREATE TABLE locateall(
     id SERIAL PRIMARY KEY,
     search_query VARCHAR(255),
